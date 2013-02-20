@@ -1,0 +1,138 @@
+#!/Users/michaelwawra/.rvm/rubies/ruby-1.9.3-p327/bin/ruby
+puts "Running with "+RUBY_VERSION
+
+require 'twilio-ruby'
+
+sid   = ENV["TWILIO_ACCOUNT_SID"]
+token = ENV["TWILIO_AUTH_TOKEN"]
+sid   = ENV["TW_SID"]   if sid == nil 
+token = ENV["TW_TOKEN"] if token == nil
+
+if sid == nil || token == nil
+  puts "Missing TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN environment variables."
+  exit
+end
+
+client = Twilio::REST::Client.new sid, token
+
+to = nil
+from = nil
+action = nil
+
+if ARGV.include?("list") || ARGV.include?("show") || ARGV.include?("print") 
+  if ARGV.include?("sms") || ARGV.include?("messages") || ARGV.include?("texts")
+    puts "Listing messages"
+
+    if ARGV.include?("to")
+      to = ARGV[ARGV.index("to")+1]
+    end
+
+    if ARGV.include?("from")
+      from = ARGV[ARGV.index("from")+1]
+    end
+
+    if ARGV.include?("limit")
+      max = ARGV[ARGV.index("limit")+1].to_i
+    end
+
+    messages = client.account.sms.messages.list({to: to, from: from}) 
+
+    max = messages.length if max == nil
+
+    messages.first(max).each do |m|
+      puts "#{m.from} => #{m.body}"
+    end
+
+  elsif ARGV.include?("calls")
+    puts "Listing Calls"
+
+    if ARGV.include?("to")
+      to = ARGV[ARGV.index("to")+1]
+    end
+
+    if ARGV.include?("from")
+      from = ARGV[ARGV.index("from")+1]
+    end
+
+    if ARGV.include?("limit")
+      max = ARGV[ARGV.index("limit")+1].to_i
+    end
+
+    calls = client.account.calls.list({to: to, from: from})
+
+    max = calls.length if max == nil
+
+    calls.first(max).each do |c|
+      puts "Call #{c.from} => #{c.to}"
+      puts "\t #{c.start_time} for #{c.duration}s" if c.status != "no-answer"
+      print "\t #{c.status}" 
+      print " ($#{c.price})" if c.status != "no-answer"
+      print "\n\n"
+    end
+
+  end
+elsif ARGV.include?("send") || ARGV.include?("sms") || ARGV.include?("message")
+  puts "Sending an SMS"
+
+  if ARGV.include?("to") 
+    to = ARGV[ARGV.index("to")+1]
+  else
+    print "Message To: "
+    to = $stdin.gets.chomp
+  end
+
+  if ARGV.include?("from") 
+    from = ARGV[ARGV.index("from")+1]
+  else
+    print "Message From: "
+    from = $stdin.gets.chomp
+  end
+
+  if ARGV.include?("body") 
+    action = ARGV[ARGV.index("body")+1]
+  else
+    print "Message Body: "
+    action = $stdin.gets.chomp
+  end
+
+  mh = client.account.sms.messages.create({from: from, to: to, body: action})
+  
+  print "Refreshing Message Status"
+  3.times { sleep(1); print "." }
+  mh.refresh
+  puts "Message was #{mh.status}"
+
+elsif ARGV.include?("call") || ARGV.include?("dial")
+  puts "Making a Call"
+
+  if ARGV.include?("to") 
+    to = ARGV[ARGV.index("to")+1]
+  else
+    print "Call To: "
+    to = $stdin.gets.chomp
+  end
+
+  if ARGV.include?("from") 
+    from = ARGV[ARGV.index("from")+1]
+  else
+    print "Call From: "
+    from = $stdin.gets.chomp
+  end
+
+  if ARGV.include?("url") 
+    action = ARGV[ARGV.index("url")+1]
+  else
+    print "Call Action: "
+    action = $stdin.gets.chomp
+  end
+  
+  call = client.account.calls.create({to: to, from: from, url: action})
+  print "Dialing"
+  3.times { sleep(1); print "."}
+  call.refresh
+  puts "Call is #{call.status}"
+
+end
+
+
+
