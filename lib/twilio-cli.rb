@@ -68,7 +68,7 @@ elsif ARGV.include?("send") || ARGV.include?("sms") || ARGV.include?("message") 
   mh = client.account.sms.messages.create({from: from, to: to, body: body})
   
   print "Refreshing Message Status"
-  3.times { sleep(0.3); print "." }
+  3.times { sleep(1); print "." }
   mh.refresh
   puts "Message was #{mh.status}"
 
@@ -81,7 +81,7 @@ elsif ARGV.include?("call") || ARGV.include?("dial")
  
   call = client.account.calls.create({to: to, from: from, url: action})
   print "Dialing"
-  3.times { sleep(0.3); print "."}
+  3.times { sleep(1); print "."}
   call.refresh
   puts "Call is #{call.status}"
 end
