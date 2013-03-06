@@ -13,7 +13,6 @@ if sid == nil || token == nil
   puts "Missing TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN environment variables."
   exit
 end
-
 client = Twilio::REST::Client.new sid, token
 
 
