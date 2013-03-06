@@ -1,7 +1,3 @@
-#!/Users/michaelwawra/.rvm/rubies/ruby-1.9.3-p327/bin/ruby
-
-#Good to output the ruby version...
-
 require 'twilio-ruby'
 
 sid   = ENV["TWILIO_ACCOUNT_SID"]
@@ -15,6 +11,14 @@ if sid == nil || token == nil
 end
 
 client = Twilio::REST::Client.new sid, token
+
+def has_keyword from, keywords
+  result = false
+  keywords.each do |key|
+    result == result || from.includes?(key)
+  end
+  result
+end
 
 def get field
   if ARGV.include?(field)
@@ -31,8 +35,7 @@ def get_or_ask field, question
   value
 end
 
-if ARGV.include?("list") || ARGV.include?("show") || ARGV.include?("print")
-
+if has_keyword ARGV, %w(list print show output tell get)
   to = get "to"
   from = get "from"
   max = get("limit").to_i
