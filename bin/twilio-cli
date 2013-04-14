@@ -1,4 +1,7 @@
-#!/Users/michaelwawra/.rvm/rubies/ruby-1.9.3-p327/bin/ruby
+#!/usr/bin/env ruby
+# coding: utf-8
+
+require 'twilio-clie'
 
 sid   = ENV["TWILIO_ACCOUNT_SID"]
 token = ENV["TWILIO_AUTH_TOKEN"]
