@@ -15,23 +15,25 @@ module TwilioCli
       if has_keyword params, %w(list print show output tell get)
         list
       elsif has_keyword params, %w(buy purchase)
-        buy param_of(%w(number buy purchase))
+        buy get_or_ask_any(%w(number buy purchase))
       elsif has_keyword params, %w(sms text message)
-        sms param_of(%w(to)), param_of(%w(from)), param_of(%w(body))
+        sms get_or_ask_any(%w(to)), get_or_ask_any(%w(from)), get_or_ask_any(%w(body))
       elsif has_keyword params, %w(dial call ring phone)
-        call param_of(%w(to)), param_of(%w(from)), param_of(%w(url action))
+        call get_or_ask_any(%w(to)), get_or_ask_any(%w(from)), get_or_ask_any(%w(url action))
+      else
+        puts fg_red("You didn't specify any parameters you noob. Sort your life out.")
       end
     end  
     
     def list
       if has_keyword @params, %w(sms text messages texts messages)
-        list_sms param_of(%w(to)), param_of(%w(from)), param_of(%w(limit max maximum first))
+        list_sms get_any(%w(to)), get_any(%w(from)), get_any(%w(limit max maximum first))
       elsif has_keyword @params, %w(calls call dial dials)
-        list_calls param_of(%w(to)), param_of(%w(from)), param_of(%w(limit max maximum first))
+        list_calls get_any(%w(to)), get_any(%w(from)), get_any(%w(limit max maximum first))
       elsif has_keyword @params, %w(my)
-        list_available param_of(%w(to country iso)), param_of(%w(limit max maximum first))
+        list_available get_any(%w(to country iso)), get_any(%w(limit max maximum first))
       elsif has_keyword @params, %w(did number numbers)
-        list_incoming param_of(%w(limit max maximum first))
+        list_incoming get_any(%w(limit max maximum first))
       end
     end
     
@@ -41,10 +43,6 @@ module TwilioCli
         result = result || from.include?(key)
       end
       result
-    end
-
-    def param_of keywords
-      get_any @params,keywords
     end
 
     def get_any from, keywords
@@ -66,10 +64,20 @@ module TwilioCli
     def get_or_ask from, field, question
       value = get from, field
       if value == nil
-        print bold(question)
-        value = $stdin.gets.chomp
+        ask (question)
       end
       value
+    end
+
+    def ask question
+      print fg_bold(question)
+      $stdin.gets.chomp
+    end
+    
+    def get_or_ask_any keywords
+      result = get_any @params, keywords
+      result = get_or_ask(@params,keywords.first, "Please specifiy #{keywords.first}\t\t:") if result == nil
+      result
     end
 
     def list_available country, limit

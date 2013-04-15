@@ -11,6 +11,8 @@ Gem::Specification.new do |s|
     lib/colourise.rb
     ]
   
+  s.add_dependency('twilio-ruby', "~> 3.9.0")
+  
   #Executables...
   s.executables = ["twilio"]
   s.default_executable = 'twilio'
