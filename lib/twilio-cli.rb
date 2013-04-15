@@ -31,9 +31,9 @@ module TwilioCli
       elsif has_keyword @params, %w(calls call dial dials)
         list_calls get_any(%w(to)), get_any(%w(from)), get_any(%w(limit max maximum first))
       elsif has_keyword @params, %w(my)
-        list_available get_any(%w(to country iso)), get_any(%w(limit max maximum first))
-      elsif has_keyword @params, %w(did number numbers)
         list_incoming get_any(%w(limit max maximum first))
+      elsif has_keyword @params, %w(did number numbers)
+        list_available get_or_ask_any(%w(country in iso)), get_any(%w(limit max maximum first)), get_any(%w(like query searh similar))
       end
     end
     
@@ -45,9 +45,9 @@ module TwilioCli
       result
     end
 
-    def get_any from, keywords
+    def get_any from
       result = nil
-      keywords.each do |key|
+      @params.each do |key|
         if from.include?(key)
           result = from[from.index(key)+1]
         end
@@ -64,7 +64,7 @@ module TwilioCli
     def get_or_ask from, field, question
       value = get from, field
       if value == nil
-        ask (question)
+        value =   ask (question)
       end
       value
     end
@@ -75,17 +75,14 @@ module TwilioCli
     end
     
     def get_or_ask_any keywords
-      result = get_any @params, keywords
-      result = get_or_ask(@params,keywords.first, "Please specifiy #{keywords.first}\t\t:") if result == nil
+      result = get_any keywords
+      result = get_or_ask(@params,keywords.first, "Please specifiy #{keywords.first}\t:") if result == nil
       result
     end
 
-    def list_available country, limit
-      country = get_or_ask "in", "Country:\t"
-      filter = get "like"
-      filter = "" if filter == nil
-      numbers = @client.account.available_phone_numbers.get(country).local.list(
-        :contains => filter
+    def list_available country, limit, query
+      numbers = @client.account.available_phone_numbers.get(country.upcase).local.list(
+        contains: query
       )
       numbers.each {|num| puts num.phone_number}
     end
