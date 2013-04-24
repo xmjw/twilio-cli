@@ -44,26 +44,64 @@ Twilio-CLI attempts to be as natural to language as possible.
 
 #Instructions
 
-  list sms (or messages, texts)
-    Lists all messages or texts send with your account.
-  list my numbers
-    Lists numbers that currently belong to your account.
-  list calls
-    Lists all calls made with your account.
-  call
-    Makes an outbound call. Requires a To, From and URL.
-  sms
-    Sends an outbound SMS. Requires a To, From, and URL.
-  buy <number>
-    Attempts to buy a specified number.  
+
+```
+$ twilio list sms 
+```
+Lists all messages or texts send with your account. You can also use 'text' or 'messages' in place of sms.
+
+```  
+$ twilio list my numbers
+```
+
+Lists numbers that currently belong to your account.
+
+```
+$ twilio list calls
+```
+
+Lists all calls made with your account.
+  
+```
+twilio call
+```
+
+Makes an outbound call. Requires a To, From and URL. Will ask for them if they are not provided.
+
+```
+$ twilio sms
+```
+
+Sends an outbound SMS. Requires a To, From, and URL.
+  
+```
+$ twilio buy <number>
+```
+
+Attempts to buy a specified number.  
     
 #Modifiers:
   
-  to <number>
-    The number a call or message is or was to. Can be used for filtering 'list'
-  from <number>
-    The number a call or message is or was from. Can be used for filtering 'list'
-  body "<text>"
-    The body text for an sms.
-  url "url"
-    The URL for an outbound call.
+```  
+to <number>
+```    
+
+The number a call or message is or was to. Can be used for filtering 'list'
+
+```
+from <number>
+```
+
+The number a call or message is or was from. Can be used for filtering 'list'
+  
+```
+body "<text>"
+```
+
+The body text for an sms.
+
+```
+url "url"
+```    
+
+The URL for an outbound call.
