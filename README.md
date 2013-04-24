@@ -63,7 +63,7 @@ $ twilio list calls
 Lists all calls made with your account.
   
 ```
-twilio call
+$ twilio call
 ```
 
 Makes an outbound call. Requires a To, From and URL. Will ask for them if they are not provided.
@@ -83,25 +83,25 @@ Attempts to buy a specified number.
 #Modifiers:
   
 ```  
-to <number>
+to +15555555555
 ```    
 
 The number a call or message is or was to. Can be used for filtering 'list'
 
 ```
-from <number>
+from +15555555555
 ```
 
 The number a call or message is or was from. Can be used for filtering 'list'
   
 ```
-body "<text>"
+body "Hello, world!"
 ```
 
 The body text for an sms.
 
 ```
-url "url"
+url "http://example.com"
 ```    
 
 The URL for an outbound call.
