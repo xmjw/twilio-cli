@@ -82,7 +82,7 @@ module TwilioCli
 
     def list_available country, limit, query
       numbers = @client.account.available_phone_numbers.get(country.upcase).local.list(
-        contains: query
+        :contains => query
       )
       numbers.each {|num| puts num.phone_number}
     end
