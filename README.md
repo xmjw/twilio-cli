@@ -1,4 +1,4 @@
-##INSTALLATION
+# Installation
 
 To install this gem, you currently need to build it locally. I have not yet got all the desired features working, but once I do, I'll post it to ruby gems.
 
@@ -38,11 +38,11 @@ export TWILIO_AUTH_TOKEN="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 Boom. Celebrate! SMS.
 
-##USAGE
+## Usage
 
 Twilio-CLI attempts to be as natural to language as possible.
 
-#Instructions
+### Instructions
 
 
 ```
@@ -80,7 +80,7 @@ $ twilio buy <number>
 
 Attempts to buy a specified number.  
     
-#Modifiers:
+### Modifiers:
   
 ```  
 to +15555555555
